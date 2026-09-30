@@ -32,6 +32,49 @@ function Media({ src, alt, title }) {
   )
 }
 
+const pad = (n) => String(n).padStart(2, '0')
+
+// 여러 장 이미지 넘겨보기 — 디자인 작업(WORK) 모달과 같은 방식:
+// 큰 이미지(뒤에 같은 이미지를 흐리게) + 우하단 번호 + 아래 썸네일
+function Gallery({ images, title }) {
+  const [idx, setIdx] = useState(0)
+  useEffect(() => setIdx(0), [images])
+  const src = images[idx]
+  return (
+    <div className="overflow-hidden rounded bg-[#EBEBEB]">
+      <div className="relative aspect-video overflow-hidden bg-ink">
+        <img
+          key={`bd-${idx}`}
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-[1.15] object-cover opacity-60 blur-[40px] saturate-[1.2]"
+        />
+        <Img key={`fg-${idx}`} src={src} alt={`${title} 이미지 ${idx + 1}`} className="absolute inset-0 m-auto max-h-[92%] max-w-[92%] object-contain" />
+        <span className="absolute bottom-3 right-3 text-[0.6rem] font-semibold tabular-nums tracking-[0.06em] text-[rgba(247,247,247,0.7)]">
+          {pad(idx + 1)} / {pad(images.length)}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2 border-t border-[#D4D4D4] px-4 py-3" role="group" aria-label="이미지 선택">
+        {images.map((im, i) => (
+          <button
+            key={im}
+            type="button"
+            onClick={() => setIdx(i)}
+            aria-label={`이미지 ${i + 1} 보기`}
+            aria-pressed={i === idx}
+            className={`h-[45px] w-[80px] shrink-0 overflow-hidden bg-[#D4D4D4] transition-[border-color,opacity] duration-fast ${
+              i === idx ? 'border-2 border-accent opacity-100' : 'border border-ink/15 opacity-45 hover:opacity-80'
+            }`}
+          >
+            <img src={im} alt="" loading="lazy" className="h-full w-full object-cover" />
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // 하위 작품의 작업 과정 문구를 묶어서, 같은 문구는 한 번만 보여줍니다.
 function groupProcesses(items) {
   const groups = []
@@ -75,7 +118,7 @@ export default function ProjectModal({ project, onClose }) {
     { label: '기간', value: project.period },
     { label: '개인·팀', value: project.team },
     { label: '내 역할', value: project.role },
-    { label: '사용 툴', value: project.tools.join(', ') },
+    { label: project.toolsLabel || '사용 툴', value: project.tools.join(', ') },
   ].filter((row) => row.value)
   const processGroups = isBundle ? groupProcesses(project.items) : []
 
@@ -106,7 +149,9 @@ export default function ProjectModal({ project, onClose }) {
           </svg>
         </button>
 
-        {!isBundle && project.images.length > 0 && (
+        {!isBundle && project.images.length > 1 && <Gallery images={project.images} title={project.title} />}
+
+        {!isBundle && project.images.length === 1 && (
           <div className="space-y-4">
             {project.images.map((src, i) => (
               <Media
@@ -122,10 +167,15 @@ export default function ProjectModal({ project, onClose }) {
         <h2 id="modal-title" className={`text-h2 ${isBundle ? '' : 'mt-10'}`}>
           {project.title}
         </h2>
+        {project.subtitle && <p className="mt-1 text-h3 text-muted">{project.subtitle}</p>}
         <p className="mt-2 text-small text-muted">
           {project.category} · {project.year}
         </p>
-        {project.award && <p className="mt-3">{project.award}</p>}
+        {project.award && (
+          <p className="mt-3 inline-block rounded bg-accent px-[10px] py-1 text-[0.62rem] font-semibold leading-[1.5] tracking-[0.02em]">
+            ✦ {project.award}
+          </p>
+        )}
 
         {info.length > 0 && (
           <dl className="mt-8 grid grid-cols-[80px_1fr] gap-y-2 border-y border-line py-4">
@@ -146,6 +196,26 @@ export default function ProjectModal({ project, onClose }) {
           )}
 
           {project.description && <p className="mt-10">{project.description}</p>}
+
+          {project.features?.length > 0 && (
+            <Block title="주요 기능">
+              <ul className="list-disc space-y-1 pl-5">
+                {project.features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
+            </Block>
+          )}
+
+          {project.note && <p className="mt-6 text-small text-muted">{project.note}</p>}
+
+          {project.board && (
+            <p className="mt-6">
+              <a href={project.board.href} target="_blank" rel="noreferrer" className="link">
+                {project.board.label} ↗<span className="sr-only"> (새 창)</span>
+              </a>
+            </p>
+          )}
 
           {project.process && (
             <Block title="작업 과정">
@@ -194,9 +264,9 @@ export default function ProjectModal({ project, onClose }) {
             href={project.link}
             target="_blank"
             rel="noreferrer"
-            className="mt-10 inline-block rounded border border-ink px-5 py-3 transition-colors duration-fast hover:bg-ink hover:text-bg"
+            className="mt-10 inline-block rounded border border-ink px-4 py-2 text-[0.875rem] font-semibold tracking-[0.02em] transition-colors duration-fast hover:border-accent hover:bg-accent"
           >
-            {project.linkLabel || '바로가기'} ↗<span className="sr-only"> (새 창)</span>
+            {project.linkLabel || '웹사이트'} ↗<span className="sr-only"> (새 창)</span>
           </a>
         )}
 

@@ -21,6 +21,7 @@ export default function ProjectCard({ project, onOpen }) {
         <Img
           src={thumb}
           alt={`${project.title} 썸네일`}
+          style={project.thumbPosition ? { objectPosition: project.thumbPosition } : undefined}
           className="aspect-card w-full object-cover transition-opacity duration-fast group-hover:opacity-90"
           fallback={<Placeholder title={project.title} className="aspect-card w-full" />}
         />
@@ -28,6 +29,7 @@ export default function ProjectCard({ project, onOpen }) {
       <h3 className="mt-4 text-h3 group-hover:underline group-hover:decoration-accent group-hover:decoration-link group-hover:underline-offset-link">
         {project.title}
       </h3>
+      {project.subtitle && <p className="mt-1 text-small">{project.subtitle}</p>}
       <p className="mt-1 text-small text-muted">
         {project.category} · {project.year}
       </p>
