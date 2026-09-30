@@ -4,8 +4,7 @@ import Archive from './components/Archive'
 import Contact from './components/Contact'
 import Experience from './components/Experience'
 import Header from './components/Header'
-import Planning from './components/Planning'
-import RingGallery from './components/RingGallery'
+import Works from './components/Works'
 
 export default function App() {
   // 첫 로드 때 #planning 같은 섹션 주소로 바로 이동 (#work/<id>는 Planning이 처리)
@@ -26,8 +25,7 @@ export default function App() {
       <main>
         <About />
         <Experience />
-        <Planning />
-        <RingGallery />
+        <Works />
         <Archive />
       </main>
       <Contact />

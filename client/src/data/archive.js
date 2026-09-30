@@ -23,7 +23,7 @@ const entries = [
     id: 'vercel-build',
     date: '2026', // TODO: 정확한 날짜
     type: '제작 기록',
-    title: 'Vercel 빌드 오류와 Git 용량 제한',
+    title: 'Vercel 빌드 오류와 Git 용량 제한 해결',
     body: '', // TODO: 내용
     images: [],
   },
@@ -47,7 +47,7 @@ const awardEntries = awards.map((a, i) => ({
   images: [],
 }))
 
-// 날짜순(오래된 것부터). "2026.09" → 202609, "2026" / "2026-1학기" → 202600
+// 날짜 역순(최신 먼저). "2026.09" → 202609, "2026" / "2026-1학기" → 202600
 function sortKey(date) {
   const m = String(date).match(/(\d{4})(?:\.(\d{1,2}))?/)
   if (!m) return 0
@@ -56,4 +56,4 @@ function sortKey(date) {
 
 export const archive = [...entries, ...awardEntries]
   .map((e, i) => ({ ...e, _i: i }))
-  .sort((a, b) => sortKey(a.date) - sortKey(b.date) || a._i - b._i)
+  .sort((a, b) => sortKey(b.date) - sortKey(a.date) || a._i - b._i)

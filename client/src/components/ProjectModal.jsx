@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useModal from '../hooks/useModal'
 import { isVideo } from '../data/images'
 import Img from './Img'
@@ -53,7 +53,7 @@ function Block({ title, children }) {
   )
 }
 
-export default function ProjectModal({ project, onClose }) {
+export default function ProjectModal({ project, onClose, onPrev, onNext }) {
   const [closing, setClosing] = useState(false)
   const requestClose = () => {
     setClosing(true)
@@ -62,21 +62,37 @@ export default function ProjectModal({ project, onClose }) {
   }
   const ref = useModal(!!project, requestClose)
 
-  useEffect(() => setClosing(false), [project?.id])
+  const overlayRef = useRef(null)
+  useEffect(() => {
+    setClosing(false)
+    overlayRef.current?.scrollTo(0, 0)
+  }, [project?.id])
+
+  // 방향키로 이전·다음 작품 (디자인 작업)
+  useEffect(() => {
+    if (!project || !onPrev || !onNext) return
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'ArrowRight') onNext()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [project, onPrev, onNext])
 
   if (!project) return null
 
   const isBundle = project.items.length > 0
   const info = [
     { label: '기간', value: project.period },
-    { label: '팀', value: project.team },
-    { label: '역할', value: project.role },
-    { label: '툴', value: project.tools.join(', ') },
+    { label: '개인·팀', value: project.team },
+    { label: '내 역할', value: project.role },
+    { label: '사용 툴', value: project.tools.join(', ') },
   ].filter((row) => row.value)
   const processGroups = isBundle ? groupProcesses(project.items) : []
 
   return (
     <div
+      ref={overlayRef}
       className={`fixed inset-0 z-modal overflow-y-auto bg-ink/60 transition-opacity duration-base ${
         closing ? 'opacity-0' : 'animate-fade-in'
       }`}
@@ -123,7 +139,7 @@ export default function ProjectModal({ project, onClose }) {
         {project.award && <p className="mt-3">{project.award}</p>}
 
         {info.length > 0 && (
-          <dl className="mt-8 grid grid-cols-[64px_1fr] gap-y-2 border-y border-line py-4">
+          <dl className="mt-8 grid grid-cols-[80px_1fr] gap-y-2 border-y border-line py-4">
             {info.map((row) => (
               <div key={row.label} className="contents">
                 <dt className="text-muted">{row.label}</dt>
@@ -193,6 +209,17 @@ export default function ProjectModal({ project, onClose }) {
           >
             {project.linkLabel || '바로가기'} ↗<span className="sr-only"> (새 창)</span>
           </a>
+        )}
+
+        {onPrev && onNext && (
+          <nav aria-label="다른 작품" className="mt-12 flex justify-between border-t border-line pt-5">
+            <button type="button" onClick={onPrev} className="hover:text-muted">
+              ← 이전 작품
+            </button>
+            <button type="button" onClick={onNext} className="hover:text-muted">
+              다음 작품 →
+            </button>
+          </nav>
         )}
       </div>
     </div>
