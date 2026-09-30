@@ -12,8 +12,15 @@ export default function About() {
             alt={`${profile.name} 프로필 사진`}
             className="h-[117px] w-[88px] flex-none rounded object-cover object-top md:h-[160px] md:w-[120px]"
           />
-          <h1 id="about-title" className="text-h1">
-            {profile.name}
+          <h1 id="about-title" className="text-h1" aria-label={profile.name}>
+            {/* 글자 단위로 아래에서 위로 등장 (80ms 간격) */}
+            <span className="rise-mask" aria-hidden="true">
+              {[...profile.name].map((ch, i) => (
+                <span key={i} className="rise-char" style={{ animationDelay: `${i * 80}ms` }}>
+                  {ch}
+                </span>
+              ))}
+            </span>
           </h1>
         </div>
 

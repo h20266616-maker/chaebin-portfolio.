@@ -1,4 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+// 헤더 맨 위 스크롤 진행 바 (2px, 라임). 스크롤은 프레임당 한 번만 계산.
+function ProgressBar() {
+  const barRef = useRef(null)
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
+      if (barRef.current) barRef.current.style.transform = `scaleX(${ratio})`
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+  return (
+    <div
+      ref={barRef}
+      aria-hidden="true"
+      className="absolute inset-x-0 top-0 h-[2px] origin-left bg-accent"
+      style={{ transform: 'scaleX(0)' }}
+    />
+  )
+}
 
 const NAV = [
   { label: '소개', href: '#about' },
@@ -22,6 +53,7 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-header h-header border-b border-line bg-bg">
+      <ProgressBar />
       <div className="mx-auto flex h-full max-w-page items-center justify-between px-gutter md:px-8">
         <a href="#about" className="text-h3 font-heading">
           박채빈

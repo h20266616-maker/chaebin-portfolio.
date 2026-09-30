@@ -2,6 +2,7 @@
 // 배포된 사이트 코드에서 그대로 복원한 컴포넌트입니다. 수치·동작은 원본과 동일합니다.
 // 사용법: <WorkGallery projects={projects} />
 import { useState, useRef, useEffect, useCallback } from "react";
+import WorkList from "./WorkList";
 
 const CARD_W = 160;
 const CARD_H = Math.round(CARD_W * (4 / 3));
@@ -603,7 +604,8 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
   // 카드 개수에 맞춰 상태 배열 준비
   if (repelRef.current.length !== n) {
     repelRef.current = Array.from({ length: n }, () => ({ x: 0, y: 0 }));
-    stateRef.current = Array.from({ length: n }, () => ({ x: 0, y: 0, z: 0, rotY: 0, rotZ: 0, rotX: 0, scale: 0.9, opacity: 0 }));
+    const introScale = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0.9 : 0.3;
+    stateRef.current = Array.from({ length: n }, () => ({ x: 0, y: 0, z: 0, rotY: 0, rotZ: 0, rotX: 0, scale: introScale, opacity: 0 }));
   }
 
   useEffect(() => { modeRef.current = mode; scrollRef.current = 0; }, [mode]);
@@ -691,6 +693,22 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
     return () => ro.disconnect();
   }, [n]);
 
+  // 첫 진입 연출: 패널이 처음 50% 이상 보일 때까지 카드를 정중앙(scale 0.3, 투명)에 붙잡아 두었다가
+  // 풀어 주면 기존 lerp가 현재 모드 배치로 펼침. 페이지당 한 번, 동작 줄이기 설정이면 생략.
+  const introRef = useRef(
+    typeof window === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+  useEffect(() => {
+    const el = containerRef.current;
+    if (introRef.current || !el) return;
+    if (!("IntersectionObserver" in window)) { introRef.current = true; return; }
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { introRef.current = true; io.disconnect(); }
+    }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   // 애니메이션 루프
   useEffect(() => {
     const tick = () => {
@@ -726,6 +744,12 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
         const card = cardRefs.current[i];
         if (!card) continue;
         const s = stateRef.current[i];
+        if (!introRef.current) {
+          // 첫 진입 전: 정중앙에 작게, 투명하게 대기
+          card.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateY(0deg) rotateZ(0deg) rotateX(0deg) scale(0.3)";
+          card.style.opacity = "0";
+          continue;
+        }
         const t = getLayout(i, m, rot, W, s.rotY, n);
         const rp = repelRef.current[i];
 
@@ -884,29 +908,7 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
       </div>
 
       {/* 작품 목록 — 줄을 누르면 상세 모달 */}
-      <ul style={{ listStyle: "none", margin: "24px 0 0", padding: 0, borderTop: "1px solid #1A1A1A" }}>
-        {projects.map((p) => (
-          <li key={p.id} style={{ borderBottom: "1px solid #E4E4E4" }}>
-            <button
-              type="button"
-              onClick={() => open(p)}
-              {...limeHover}
-              style={{
-                width: "100%", display: "flex", flexWrap: "wrap", alignItems: "baseline", columnGap: "16px", rowGap: "4px",
-                padding: "14px 0", background: "none", border: "none", textAlign: "left", cursor: "pointer",
-                fontFamily: "inherit", color: "#1A1A1A",
-              }}
-            >
-              <span style={{ width: "48px", flexShrink: 0, color: "#6B6B6B", fontSize: "0.875rem" }}>{p.year}</span>
-              <span style={{ fontWeight: 700, fontSize: "1rem" }}>{p.title}</span>
-              <span style={{ color: "#6B6B6B", fontSize: "0.75rem", letterSpacing: "0.06em" }}>{p.category}</span>
-              {p.award && (
-                <span style={{ fontSize: "0.75rem", color: "#1A1A1A" }}>{p.award.startsWith("✦") ? p.award : `✦ ${p.award}`}</span>
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <WorkList projects={projects} onOpen={open} />
 
       {selected && (
         <DetailModal
