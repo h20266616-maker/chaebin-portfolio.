@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { DESIGN_CATEGORIES, projects } from '../data/projects'
+import { useCallback, useEffect, useState } from 'react'
+import { projects } from '../data/projects'
 import ProjectCard from './ProjectCard'
 import ProjectModal from './ProjectModal'
 import Section from './Section'
 
-const TABS = [
-  { id: 'planning', label: '기획' },
-  { id: 'design', label: '디자인' },
+const SECTIONS = [
+  { id: 'planning', title: '홍보·기획 작업' },
+  { id: 'design', title: '디자인 작업' },
 ]
 
+// 개별 작품 링크: #work/<id>
 const HASH_PREFIX = '#work/'
 
 const byFeatured = (a, b) => Number(b.featured) - Number(a.featured)
@@ -18,28 +19,15 @@ function idFromHash() {
   return hash.startsWith(HASH_PREFIX) ? decodeURIComponent(hash.slice(HASH_PREFIX.length)) : null
 }
 
-const pill = (active) =>
-  `rounded px-1 pb-1 transition-colors duration-fast border-b-2 ${
-    active ? 'border-accent font-heading text-ink' : 'border-transparent text-muted hover:text-ink'
-  }`
-
 export default function Work() {
-  const [tab, setTab] = useState('planning')
-  const [category, setCategory] = useState('전체')
   const [openId, setOpenId] = useState(null)
 
-  // URL 해시(#work/<id>)와 모달 상태를 맞춥니다.
+  // URL 해시와 모달 상태를 맞춥니다.
   useEffect(() => {
     const sync = (initial) => {
-      const id = idFromHash()
-      const project = projects.find((p) => p.id === id)
-      if (project) {
-        setTab(project.group)
-        setOpenId(project.id)
-        if (initial === true) document.getElementById('work')?.scrollIntoView()
-      } else {
-        setOpenId(null)
-      }
+      const project = projects.find((p) => p.id === idFromHash())
+      setOpenId(project?.id ?? null)
+      if (project && initial === true) document.getElementById(project.group)?.scrollIntoView()
     }
     sync(true)
     window.addEventListener('hashchange', sync)
@@ -51,70 +39,30 @@ export default function Work() {
   }
 
   const close = useCallback(() => {
+    const project = projects.find((p) => p.id === openId)
     setOpenId(null)
-    if (idFromHash()) history.replaceState(null, '', '#work')
-  }, [])
-
-  const visible = useMemo(
-    () =>
-      projects
-        .filter((p) => p.group === tab)
-        .filter((p) => tab !== 'design' || category === '전체' || p.category === category)
-        .sort(byFeatured),
-    [tab, category],
-  )
+    if (idFromHash()) history.replaceState(null, '', `#${project?.group ?? 'planning'}`)
+  }, [openId])
 
   const openProject = projects.find((p) => p.id === openId) ?? null
 
   return (
-    <Section id="work" title="작업">
-      <div role="tablist" aria-label="작업 분류" className="flex gap-6 text-h3">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            id={`tab-${t.id}`}
-            aria-selected={tab === t.id}
-            aria-controls="work-panel"
-            onClick={() => {
-              setTab(t.id)
-              setCategory('전체')
-            }}
-            className={pill(tab === t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      <div id="work-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="mt-6">
-        {tab === 'design' && (
-          <div role="group" aria-label="디자인 세부 분류" className="flex flex-wrap gap-x-5 gap-y-2">
-            {['전체', ...DESIGN_CATEGORIES].map((c) => (
-              <button
-                key={c}
-                type="button"
-                aria-pressed={category === c}
-                onClick={() => setCategory(c)}
-                className={pill(category === c)}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <ul key={`${tab}-${category}`} className="mt-10 grid animate-fade-in gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-          {visible.map((p) => (
-            <li key={p.id}>
-              <ProjectCard project={p} onOpen={open} />
-            </li>
-          ))}
-        </ul>
-      </div>
-
+    <>
+      {SECTIONS.map((section) => (
+        <Section key={section.id} id={section.id} title={section.title}>
+          <ul className="grid gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            {projects
+              .filter((p) => p.group === section.id)
+              .sort(byFeatured)
+              .map((p) => (
+                <li key={p.id}>
+                  <ProjectCard project={p} onOpen={open} />
+                </li>
+              ))}
+          </ul>
+        </Section>
+      ))}
       <ProjectModal project={openProject} onClose={close} />
-    </Section>
+    </>
   )
 }

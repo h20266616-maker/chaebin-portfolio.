@@ -7,7 +7,7 @@ function List({ title, items }) {
       <h3 className="border-b border-ink pb-3 text-h3">{title}</h3>
       <ul>
         {items.map((item) => (
-          <li key={item.title} className="grid grid-cols-[88px_1fr] gap-4 border-b border-line py-4">
+          <li key={item.title} className="grid grid-cols-[104px_1fr] gap-4 border-b border-line py-4">
             <span className="text-muted">{item.year}</span>
             <div>
               <p>{item.title}</p>
