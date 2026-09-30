@@ -7,10 +7,17 @@ function List({ title, items }) {
       <h3 className="border-b border-ink pb-3 text-h3">{title}</h3>
       <ul>
         {items.map((item) => (
-          <li key={item.title} className="grid grid-cols-[104px_1fr] gap-4 border-b border-line py-4">
-            <span className="text-muted">{item.year}</span>
+          <li key={item.title} className="grid grid-cols-[112px_1fr] gap-4 border-b border-line py-4">
+            <span className="whitespace-nowrap text-muted">{item.year}</span>
             <div>
-              <p>{item.title}</p>
+              <p>
+                {item.title}
+                {item.current && (
+                  <span className="ml-2 inline-block rounded bg-accent px-2 py-0.5 align-middle text-[0.7rem] font-semibold leading-[1.5]">
+                    현재
+                  </span>
+                )}
+              </p>
               {item.description && <p className="mt-1 text-small text-muted">{item.description}</p>}
             </div>
           </li>

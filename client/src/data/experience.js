@@ -1,8 +1,15 @@
+// 오래된 순서 → 최근 순서. current: true 이면 제목 옆에 "현재" 배지
 export const careers = [
   {
-    title: '중앙동아리 하얀도화지 부회장',
-    year: '2026-2학기~',
-    description: '동아리 활동 아카이빙 담당 (현재)',
+    title: '한림대학교 입학',
+    year: '2026-1학기',
+    description: '',
+  },
+  {
+    title: 'ISO 동아리 활동',
+    year: '2026-1학기~',
+    description: '',
+    current: true,
   },
   {
     title: '중앙동아리 하얀도화지 홍보부 운영진',
@@ -10,14 +17,16 @@ export const careers = [
     description: '동아리 인스타그램 운영',
   },
   {
-    title: '한림대학교 입학',
-    year: '2026',
-    description: '',
+    title: '중앙동아리 하얀도화지 부회장',
+    year: '2026-2학기~',
+    description: '동아리 활동 아카이빙 담당',
+    current: true,
   },
   {
-    title: 'ISO 동아리 활동',
-    year: '2026',
-    description: "디지털인문예술 전공 동아리 I-SO에서 '춘천 계절연구소' 캐릭터 프로젝트 참여",
+    title: '과동아리 커넥트 CON:NECT 활동',
+    year: '2026-2학기~',
+    description: '',
+    current: true,
   },
 ]
 
