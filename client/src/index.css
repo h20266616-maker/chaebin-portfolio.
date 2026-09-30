@@ -26,6 +26,12 @@
   }
 }
 
+/* 링 갤러리 TILT 보기의 스와이프 힌트 */
+@keyframes scroll-hint-sway {
+  0%, 100% { transform: translateX(-3px); }
+  50%       { transform: translateX(3px); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 0ms !important;

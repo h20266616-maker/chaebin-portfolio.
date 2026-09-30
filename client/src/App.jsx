@@ -1,11 +1,19 @@
+import { useEffect } from 'react'
 import About from './components/About'
 import Archive from './components/Archive'
 import Contact from './components/Contact'
 import Experience from './components/Experience'
 import Header from './components/Header'
-import Work from './components/Work'
+import Planning from './components/Planning'
+import RingGallery from './components/RingGallery'
 
 export default function App() {
+  // 첫 로드 때 #planning 같은 섹션 주소로 바로 이동 (#work/<id>는 Planning이 처리)
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (id && !id.includes('/')) document.getElementById(id)?.scrollIntoView()
+  }, [])
+
   return (
     <>
       <a
@@ -18,7 +26,8 @@ export default function App() {
       <main>
         <About />
         <Experience />
-        <Work />
+        <Planning />
+        <RingGallery />
         <Archive />
       </main>
       <Contact />
