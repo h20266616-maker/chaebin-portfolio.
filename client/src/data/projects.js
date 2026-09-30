@@ -1,5 +1,30 @@
 export const projects = [
   {
+    id: 11,
+    title: '화천 지역상생 영수증',
+    category: 'APP DEVELOPMENT',
+    year: '2026',
+    award: '✦ 2026 영수증 플랫폼 기반 Town MICE 아이디어톤 대상',
+    series: 'Town MICE 아이디어톤',
+    seriesDescription:
+      '한림대학교 Town MICE 연구소 주최, (주)더픽트 영수증 플랫폼을 활용한 화천군 관광 문제 해결 아이디어톤',
+    description:
+      '영수증 한 장이 화천의 소비를 잇는 지역상생 캐시백 서비스입니다. 화천에서 쓴 영수증을 찍거나 앨범에서 올리면 캐시백과 스탬프가 쌓이고, 쌓은 캐시백은 화천의 온라인 상점과 가맹점에서 다시 쓸 수 있습니다. 인증할수록 캐시백률이 10%에서 20%까지 오르고, 화천 명소 9곳 스탬프 투어와 카카오맵 기반 가맹점·자전거 대여소 지도를 함께 제공합니다.',
+    process:
+      '팀에서 앱 개발을 맡아 아이디어를 실제로 동작하는 웹앱으로 구현했습니다. 구글·이메일 로그인과 게스트 둘러보기, 영수증 인증과 캐시백 적립, 스탬프북, 온라인 상점 캐시백 결제(체험), 지도·자전거 화면을 만들었습니다. 영수증 인증과 캐시백 결제는 시연용 화면입니다.',
+    tools: ['React', 'Vite', 'Firebase', '카카오맵 API', 'Vercel'],
+    link: 'https://hwacheon-receipt.vercel.app/',
+    linkLabel: '화천 지역상생 영수증',
+    images: [
+      '/images/work/project-11-1.jpg',
+      '/images/planning/town-mice/02-start.webp',
+      '/images/planning/town-mice/03-receipt.webp',
+      '/images/planning/town-mice/04-cashback.webp',
+      '/images/planning/town-mice/05-store.webp',
+      '/images/planning/town-mice/06-map.webp',
+    ],
+  },
+  {
     id: 1,
     title: '흔열 (痕熱)',
     category: 'POSTER DESIGN',
