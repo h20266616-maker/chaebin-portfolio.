@@ -220,6 +220,7 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
   const index = projects.findIndex((p) => p.id === project.id);
   const images = project.images || [];
   const src = images[imgIdx];
+  const titles = project.imageTitles; // 있을 때만 이미지별 제목 표시
   const video = isVideo(src);
   const videoRef = useRef(null);
 
@@ -309,6 +310,17 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
                 {project.category}
               </span>
             )}
+            {titles?.[imgIdx] && (
+              <span
+                style={{
+                  position: "absolute", bottom: "12px", left: "12px", zIndex: 10, fontSize: "0.68rem",
+                  fontWeight: 700, color: "#FFFFFF", backgroundColor: "rgba(28,28,28,0.6)",
+                  padding: "4px 8px", letterSpacing: "0.02em", lineHeight: 1.4, maxWidth: "70%",
+                }}
+              >
+                {titles[imgIdx]}
+              </span>
+            )}
             <span
               style={{
                 position: "absolute", bottom: "12px", right: "12px", zIndex: 10, fontSize: "0.6rem",
@@ -325,6 +337,7 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
               {images.map((im, i) => (
                 <div
                   key={i}
+                  title={titles?.[i]}
                   onClick={() => { setImgIdx(i); setBroken(false); }}
                   style={{
                     width: "52px", height: "68px", backgroundColor: "#D4D4D4",
