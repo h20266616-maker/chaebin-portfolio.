@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import About from './components/About'
-import Contact from './components/Contact'
 import Experience from './components/Experience'
 import Header from './components/Header'
 import WorkGallery from './components/WorkGallery'
@@ -27,7 +26,9 @@ export default function App() {
         <Experience />
         <WorkGallery projects={projects} />
       </main>
-      <Contact />
+      <footer className="border-t border-line">
+        <p className="mx-auto max-w-page px-gutter py-8 text-small text-muted md:px-8">© 2026 박채빈</p>
+      </footer>
     </>
   )
 }

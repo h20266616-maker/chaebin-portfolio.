@@ -18,20 +18,17 @@ export default function About() {
         </div>
 
         <div>
-          <p className="mt-8 text-h3 font-heading text-muted">
-            {profile.tagline[0]}
-            <br />
-            {profile.tagline[1]}
-          </p>
-          <p className="mt-8">{profile.intro}</p>
-
-          <dl className="mt-10 grid grid-cols-[80px_1fr] gap-y-3 border-t border-line pt-6">
+          <dl className="mt-8 grid grid-cols-[80px_1fr] gap-y-3 border-t border-line pt-6">
             {profile.info.map((row) => (
               <div key={row.label} className="contents">
                 <dt className="text-muted">{row.label}</dt>
                 <dd className="break-all">
                   {row.href ? (
-                    <a href={row.href} className="link">
+                    <a
+                      href={row.href}
+                      className="link"
+                      {...(row.href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}
+                    >
                       {row.value}
                     </a>
                   ) : (

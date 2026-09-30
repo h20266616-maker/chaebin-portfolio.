@@ -4,7 +4,6 @@ const NAV = [
   { label: '소개', href: '#about' },
   { label: '활동', href: '#experience' },
   { label: '디자인', href: '#work' },
-  { label: '연락처', href: '#contact' },
 ]
 
 export default function Header() {
