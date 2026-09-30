@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 const NAV = [
   { label: '소개', href: '#about' },
   { label: '활동', href: '#experience' },
-  { label: '디자인', href: '#work' },
+  { label: '홍보 아카이빙', href: '#work' },
 ]
 
 export default function Header() {
