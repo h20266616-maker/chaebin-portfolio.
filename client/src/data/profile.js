@@ -29,6 +29,5 @@ export const profile = {
 
 export const contacts = [
   { label: '이메일', value: EMAIL, href: `mailto:${EMAIL}` },
-  // TODO: 실제 주소 확인 (저장소 계정은 github.com/h20266616-maker)
-  { label: 'GitHub', value: 'github.com/chaebin', href: 'https://github.com/chaebin' },
+  { label: 'GitHub', value: 'github.com/h20266616-maker', href: 'https://github.com/h20266616-maker' },
 ]
