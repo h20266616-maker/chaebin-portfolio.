@@ -4,18 +4,21 @@ import Img from './Img'
 export default function About() {
   return (
     <section id="about" aria-labelledby="about-title" className="pb-16 pt-[calc(theme(spacing.header)+48px)] md:pb-section md:pt-[calc(theme(spacing.header)+80px)]">
-      <div className="mx-auto grid max-w-page gap-10 px-gutter md:grid-cols-[2fr_3fr] md:gap-16 md:px-8">
-        <Img
-          src={profile.photo}
-          alt={`${profile.name} 프로필 사진`}
-          className="aspect-portrait w-full max-w-md rounded object-cover object-top"
-        />
-
-        <div className="max-w-prose">
+      <div className="mx-auto max-w-page px-gutter md:px-8">
+        {/* 사진 + 이름 가로 배치 (아래쪽 정렬) */}
+        <div className="flex items-end gap-6">
+          <Img
+            src={profile.photo}
+            alt={`${profile.name} 프로필 사진`}
+            className="h-[117px] w-[88px] flex-none rounded object-cover object-top md:h-[160px] md:w-[120px]"
+          />
           <h1 id="about-title" className="text-h1">
             {profile.name}
           </h1>
-          <p className="mt-4 text-h3 font-heading text-muted">
+        </div>
+
+        <div>
+          <p className="mt-8 text-h3 font-heading text-muted">
             {profile.tagline[0]}
             <br />
             {profile.tagline[1]}
