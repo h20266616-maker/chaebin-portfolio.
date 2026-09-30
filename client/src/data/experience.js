@@ -23,7 +23,7 @@ export const careers = [
     current: true,
   },
   {
-    title: '과동아리 커넥트 CON:NECT 활동',
+    title: 'CON:NECT 동아리 활동',
     year: '2026-2학기~',
     description: '',
     current: true,
