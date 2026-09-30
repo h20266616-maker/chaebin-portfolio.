@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import About from './components/About'
-import Archive from './components/Archive'
 import Contact from './components/Contact'
 import Experience from './components/Experience'
 import Header from './components/Header'
@@ -26,7 +25,6 @@ export default function App() {
         <About />
         <Experience />
         <Works />
-        <Archive />
       </main>
       <Contact />
     </>
