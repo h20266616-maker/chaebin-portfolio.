@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
-import { designWorks } from '../data/designWorks'
 import { planning } from '../data/planning'
 import Planning from './Planning'
 import ProjectModal from './ProjectModal'
-import RingGallery from './RingGallery'
+import Work from './Work'
 
-// 개별 작품 링크: #work/<id> (홍보·기획, 디자인 공통)
+// 홍보·기획 작업 개별 링크: #work/<id>
 const HASH_PREFIX = '#work/'
-const ALL = [...planning, ...designWorks]
 
 function idFromHash() {
   const { hash } = window.location
@@ -20,9 +18,9 @@ export default function Works() {
   // URL 해시와 상세 화면 상태를 맞춥니다.
   useEffect(() => {
     const sync = (initial) => {
-      const project = ALL.find((p) => p.id === idFromHash())
+      const project = planning.find((p) => p.id === idFromHash())
       setOpenId(project?.id ?? null)
-      if (project && initial === true) document.getElementById(project.group)?.scrollIntoView()
+      if (project && initial === true) document.getElementById('planning')?.scrollIntoView()
     }
     sync(true)
     window.addEventListener('hashchange', sync)
@@ -30,35 +28,22 @@ export default function Works() {
   }, [])
 
   const open = useCallback((id) => {
-    const project = ALL.find((p) => p.id === id)
-    if (idFromHash()) history.replaceState(null, '', `#work/${id}`)
-    else window.location.hash = `work/${id}`
-    setOpenId(project?.id ?? null)
+    window.location.hash = `work/${id}`
   }, [])
 
-  const openProject = ALL.find((p) => p.id === openId) ?? null
-
   const close = useCallback(() => {
-    const group = ALL.find((p) => p.id === openId)?.group ?? 'planning'
     setOpenId(null)
-    if (idFromHash()) history.replaceState(null, '', `#${group}`)
-  }, [openId])
+    if (idFromHash()) history.replaceState(null, '', '#planning')
+  }, [])
 
-  // 디자인 작업 상세에서는 기존 갤러리처럼 이전·다음 작품으로 이동
-  let onPrev
-  let onNext
-  if (openProject?.group === 'design') {
-    const i = designWorks.findIndex((p) => p.id === openId)
-    const n = designWorks.length
-    onPrev = () => open(designWorks[(i - 1 + n) % n].id)
-    onNext = () => open(designWorks[(i + 1) % n].id)
-  }
+  const openProject = planning.find((p) => p.id === openId) ?? null
 
   return (
     <>
       <Planning works={planning} onOpen={open} />
-      <RingGallery works={designWorks} onOpen={open} paused={openProject?.group === 'design'} />
-      <ProjectModal project={openProject} onClose={close} onPrev={onPrev} onNext={onNext} />
+      {/* 디자인 작업 — 기존 WORK 갤러리 + 상세 모달 그대로 */}
+      <Work />
+      <ProjectModal project={openProject} onClose={close} />
     </>
   )
 }

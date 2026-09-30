@@ -4,7 +4,7 @@ const NAV = [
   { label: '소개', href: '#about' },
   { label: '활동', href: '#experience' },
   { label: '기획', href: '#planning' },
-  { label: '디자인', href: '#design' },
+  { label: '디자인', href: '#work' },
   { label: '아카이브', href: '#archive' },
   { label: '연락처', href: '#contact' },
 ]

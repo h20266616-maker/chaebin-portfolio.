@@ -53,7 +53,7 @@ function Block({ title, children }) {
   )
 }
 
-export default function ProjectModal({ project, onClose, onPrev, onNext }) {
+export default function ProjectModal({ project, onClose }) {
   const [closing, setClosing] = useState(false)
   const requestClose = () => {
     setClosing(true)
@@ -67,17 +67,6 @@ export default function ProjectModal({ project, onClose, onPrev, onNext }) {
     setClosing(false)
     overlayRef.current?.scrollTo(0, 0)
   }, [project?.id])
-
-  // 방향키로 이전·다음 작품 (디자인 작업)
-  useEffect(() => {
-    if (!project || !onPrev || !onNext) return
-    const onKey = (e) => {
-      if (e.key === 'ArrowLeft') onPrev()
-      if (e.key === 'ArrowRight') onNext()
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [project, onPrev, onNext])
 
   if (!project) return null
 
@@ -211,16 +200,6 @@ export default function ProjectModal({ project, onClose, onPrev, onNext }) {
           </a>
         )}
 
-        {onPrev && onNext && (
-          <nav aria-label="다른 작품" className="mt-12 flex justify-between border-t border-line pt-5">
-            <button type="button" onClick={onPrev} className="hover:text-muted">
-              ← 이전 작품
-            </button>
-            <button type="button" onClick={onNext} className="hover:text-muted">
-              다음 작품 →
-            </button>
-          </nav>
-        )}
       </div>
     </div>
   )

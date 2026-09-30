@@ -26,6 +26,37 @@
   }
 }
 
+/* ── 디자인 작업(기존 WORK 갤러리)에서 쓰는 스타일 — 기존 index.css에서 그대로 ── */
+@keyframes glitch {
+  0%   { text-shadow: none;                            transform: translate(0); }
+  20%  { text-shadow: -2px 0 #DCF4A2, 2px 0 #000000;  transform: translate(-2px, 1px); }
+  40%  { text-shadow: 2px 0 #DCF4A2, -2px 0 #ffffff;  transform: translate(2px, -1px); }
+  60%  { text-shadow: -2px 0 #ffffff, 2px 0 #DCF4A2;  transform: translate(0); }
+  80%  { text-shadow: 2px 0 #000000, -2px 0 #DCF4A2;  transform: translate(1px, 2px); }
+  100% { text-shadow: none;                            transform: translate(0); }
+}
+
+.glitch-active {
+  animation: glitch 600ms steps(4) forwards;
+}
+
+.section-padding {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+@media (min-width: 768px) {
+  .section-padding {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+@media (min-width: 1024px) {
+  .section-padding {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
 /* 링 갤러리 TILT 보기의 스와이프 힌트 */
 @keyframes scroll-hint-sway {
   0%, 100% { transform: translateX(-3px); }
