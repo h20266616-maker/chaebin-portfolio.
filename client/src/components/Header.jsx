@@ -34,7 +34,7 @@ function ProgressBar() {
 const NAV = [
   { label: '소개', href: '#about' },
   { label: '활동', href: '#experience' },
-  { label: '작업', href: '#work' },
+  { label: '작업', href: '#files' },
 ]
 
 export default function Header() {

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import About from './components/About'
 import Experience from './components/Experience'
+import FolderFiles from './components/FolderFiles'
 import Header from './components/Header'
 import WorkGallery from './components/WorkGallery'
 import { projects } from './data/projects'
@@ -24,6 +25,8 @@ export default function App() {
       <main>
         <About />
         <Experience />
+        {/* 작업 섹션 맨 앞: 파일철 → 파일을 누르면 #work/작품id 로 갤러리 모달 열림 */}
+        <FolderFiles projects={projects} email="a01022966356@gmail.com" />
         <WorkGallery projects={projects} />
       </main>
       <footer className="border-t border-line">

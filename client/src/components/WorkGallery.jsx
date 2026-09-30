@@ -2,7 +2,6 @@
 // 배포된 사이트 코드에서 그대로 복원한 컴포넌트입니다. 수치·동작은 원본과 동일합니다.
 // 사용법: <WorkGallery projects={projects} />
 import { useState, useRef, useEffect, useCallback } from "react";
-import WorkList from "./WorkList";
 
 const CARD_W = 160;
 const CARD_H = Math.round(CARD_W * (4 / 3));
@@ -907,8 +906,6 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
         </div>
       </div>
 
-      {/* 작품 목록 — 줄을 누르면 상세 모달 */}
-      <WorkList projects={projects} onOpen={open} />
 
       {selected && (
         <DetailModal
