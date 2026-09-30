@@ -213,6 +213,30 @@ const limeHover = {
   onMouseLeave: (e) => { e.currentTarget.style.color = "#1A1A1A"; },
 };
 
+/* ---------- 큰 이미지 좌우 화살표 ---------- */
+function ArrowButton({ side, label, onClick }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      onPointerDown={(e) => e.stopPropagation()}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "absolute", top: "50%", [side]: "12px", transform: "translateY(-50%)", zIndex: 11,
+        width: "40px", height: "40px", borderRadius: "50%", border: "none", cursor: "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
+        backgroundColor: hover ? "#AAFF00" : "rgba(28,28,28,0.45)", color: hover ? "#1A1A1A" : "#FFFFFF",
+        fontSize: "1.5rem", lineHeight: 1, fontFamily: "inherit", transition: "background-color 150ms ease, color 150ms ease",
+      }}
+    >
+      <span aria-hidden="true" style={{ marginTop: "-2px" }}>{side === "left" ? "‹" : "›"}</span>
+    </button>
+  );
+}
+
 function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) {
   const [imgIdx, setImgIdx] = useState(0);
   const [broken, setBroken] = useState(false);
@@ -223,8 +247,65 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
   const titles = project.imageTitles; // 있을 때만 이미지별 제목 표시
   const video = isVideo(src);
   const videoRef = useRef(null);
+  const fgRef = useRef(null);
+  const thumbRefs = useRef([]);
+  const dirRef = useRef(0); // 넘긴 방향: 1 다음, -1 이전, 0 전환 없음
+  const dragRef = useRef(null);
+  const multi = images.length > 1;
 
-  useEffect(() => { setImgIdx(0); setBroken(false); }, [project.id]);
+  useEffect(() => { dirRef.current = 0; setImgIdx(0); setBroken(false); }, [project.id]);
+
+  // 이미지 한 장씩 넘기기 (범위 밖이면 무시)
+  const goTo = useCallback((i) => {
+    if (i < 0 || i >= images.length || i === imgIdx) return;
+    dirRef.current = i > imgIdx ? 1 : -1;
+    setImgIdx(i);
+    setBroken(false);
+  }, [images.length, imgIdx]);
+
+  // 넘길 때 약 250ms 옆으로 밀리며 바뀌는 전환 + 현재 썸네일이 보이도록 스크롤
+  useEffect(() => {
+    const dir = dirRef.current;
+    if (!dir) return;
+    dirRef.current = 0;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = fgRef.current;
+    if (el && !reduce && el.animate) {
+      el.animate(
+        [
+          { transform: `translate(calc(-50% + ${dir * 48}px), -50%)`, opacity: 0 },
+          { transform: "translate(-50%, -50%)", opacity: 1 },
+        ],
+        { duration: 250, easing: "ease-out" }
+      );
+    }
+    thumbRefs.current[imgIdx]?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reduce ? "auto" : "smooth" });
+  }, [imgIdx]);
+
+  // 키보드 ← →: 이미지부터 넘기고, 끝에서는 이전/다음 작품으로
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowRight") { if (imgIdx < images.length - 1) goTo(imgIdx + 1); else onNext(); }
+      if (e.key === "ArrowLeft") { if (imgIdx > 0) goTo(imgIdx - 1); else onPrev(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [imgIdx, images.length, goTo, onNext, onPrev]);
+
+  // 스와이프(터치)·드래그(마우스): 가로로 50px 이상 밀었을 때만 넘기기
+  const onPointerDown = (e) => {
+    if (!multi || (e.pointerType === "mouse" && e.button !== 0)) return;
+    dragRef.current = { x: e.clientX, y: e.clientY };
+    if (e.pointerType === "mouse") e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onPointerUp = (e) => {
+    const d = dragRef.current;
+    dragRef.current = null;
+    if (!d) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy)) goTo(imgIdx + (dx < 0 ? 1 : -1));
+  };
 
   // 열릴 때도 250ms 페이드 + 0.94→1 확대 (첫 프레임을 0.94/투명으로 그린 뒤 전환)
   const [entered, setEntered] = useState(false);
@@ -285,7 +366,16 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
             borderRadius: mobile ? "12px 12px 0 0" : "12px 0 0 12px", overflow: "hidden",
           }}
         >
-          <div style={{ flex: 1, position: "relative", minHeight: mobile ? "200px" : "360px", overflow: "hidden", backgroundColor: "#1C1C1C" }}>
+          <div
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerCancel={() => { dragRef.current = null; }}
+            onDragStart={(e) => e.preventDefault()}
+            style={{
+              flex: 1, position: "relative", minHeight: mobile ? "200px" : "360px", overflow: "hidden", backgroundColor: "#1C1C1C",
+              touchAction: multi ? "pan-y" : "auto", cursor: multi ? "grab" : "default", userSelect: "none",
+            }}
+          >
             {!broken && src ? (
               <>
                 {video ? (
@@ -294,9 +384,9 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
                   <img key={`bd-${imgIdx}`} src={src} alt="" aria-hidden="true" style={backdrop} />
                 )}
                 {video ? (
-                  <video key={`fg-${imgIdx}`} ref={videoRef} src={src} autoPlay loop muted playsInline onError={() => setBroken(true)} style={fg} />
+                  <video key={`fg-${imgIdx}`} ref={(el) => { videoRef.current = el; fgRef.current = el; }} src={src} autoPlay loop muted playsInline onError={() => setBroken(true)} style={fg} />
                 ) : (
-                  <img key={`fg-${imgIdx}`} src={src} alt={project.title} onError={() => setBroken(true)} style={fg} />
+                  <img key={`fg-${imgIdx}`} ref={fgRef} src={src} alt={project.title} draggable={false} onError={() => setBroken(true)} style={fg} />
                 )}
               </>
             ) : (
@@ -321,6 +411,12 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
                 {titles[imgIdx]}
               </span>
             )}
+            {multi && imgIdx > 0 && (
+              <ArrowButton side="left" label="이전 이미지" onClick={() => goTo(imgIdx - 1)} />
+            )}
+            {multi && imgIdx < images.length - 1 && (
+              <ArrowButton side="right" label="다음 이미지" onClick={() => goTo(imgIdx + 1)} />
+            )}
             <span
               style={{
                 position: "absolute", bottom: "12px", right: "12px", zIndex: 10, fontSize: "0.6rem",
@@ -337,8 +433,9 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
               {images.map((im, i) => (
                 <div
                   key={i}
+                  ref={(el) => { thumbRefs.current[i] = el; }}
                   title={titles?.[i]}
-                  onClick={() => { setImgIdx(i); setBroken(false); }}
+                  onClick={() => goTo(i)}
                   style={{
                     width: "52px", height: "68px", backgroundColor: "#D4D4D4",
                     border: i === imgIdx ? "2px solid #AAFF00" : "1px solid rgba(26,26,26,0.15)",
@@ -514,17 +611,15 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
     setSelected(projects[(i - 1 + projects.length) % projects.length]);
   }, [projects]);
 
-  // 키보드: ESC 닫기, ← → 이전/다음
+  // 키보드: ESC 닫기 (← →는 상세 모달이 이미지 넘기기 → 끝에서 이전/다음 작품으로 처리)
   useEffect(() => {
     const onKey = (e) => {
       if (!selectedRef.current) return;
       if (e.key === "Escape") close();
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [close, next, prev]);
+  }, [close]);
 
   // 마우스 휠 (TILT 모드에서 좌우 스크롤)
   useEffect(() => {
