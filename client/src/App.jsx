@@ -3,10 +3,11 @@ import About from './components/About'
 import Contact from './components/Contact'
 import Experience from './components/Experience'
 import Header from './components/Header'
-import Works from './components/Works'
+import WorkGallery from './components/WorkGallery'
+import { projects } from './data/projects'
 
 export default function App() {
-  // 첫 로드 때 #planning 같은 섹션 주소로 바로 이동 (#work/<id>는 Planning이 처리)
+  // 첫 로드 때 #work 같은 섹션 주소로 바로 이동
   useEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1))
     if (id && !id.includes('/')) document.getElementById(id)?.scrollIntoView()
@@ -24,7 +25,7 @@ export default function App() {
       <main>
         <About />
         <Experience />
-        <Works />
+        <WorkGallery projects={projects} />
       </main>
       <Contact />
     </>

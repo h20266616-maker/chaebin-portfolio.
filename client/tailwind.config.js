@@ -8,7 +8,6 @@ export default {
         ink: '#1C1C1C',
         muted: '#6B6B6B',
         line: '#E4E4E4',
-        placeholder: '#EFEFEF',
         accent: '#AAFF00',
       },
       fontFamily: {
@@ -37,10 +36,6 @@ export default {
       borderRadius: {
         DEFAULT: '4px',
         sm: '2px',
-      },
-      aspectRatio: {
-        card: '4 / 5',
-        portrait: '3 / 4',
       },
       transitionDuration: {
         fast: '150ms',
