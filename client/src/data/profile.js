@@ -30,5 +30,6 @@ export const profile = {
 
 export const contacts = [
   { label: '이메일', value: EMAIL, href: `mailto:${EMAIL}` },
+  { label: '전화번호', value: '010-2295-6356', href: 'tel:01022956356' },
   { label: 'GitHub', value: 'github.com/h20266616-maker', href: 'https://github.com/h20266616-maker' },
 ]
