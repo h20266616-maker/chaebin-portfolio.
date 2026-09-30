@@ -224,6 +224,14 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
   const videoRef = useRef(null);
 
   useEffect(() => { setImgIdx(0); setBroken(false); }, [project.id]);
+
+  // 열릴 때도 250ms 페이드 + 0.94→1 확대 (첫 프레임을 0.94/투명으로 그린 뒤 전환)
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  const shown = entered && !isClosing;
   useEffect(() => { if (video && videoRef.current) videoRef.current.play().catch(() => {}); }, [video, imgIdx]);
 
   const backdrop = {
@@ -242,14 +250,14 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
       style={{
         position: "fixed", inset: 0, backgroundColor: "rgba(28,28,28,0.85)", zIndex: 9000,
         display: "flex", alignItems: "center", justifyContent: "center",
-        padding: mobile ? "12px" : "32px", opacity: isClosing ? 0 : 1, transition: "opacity 300ms ease",
+        padding: mobile ? "12px" : "32px", opacity: shown ? 1 : 0, transition: "opacity 300ms ease",
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          opacity: isClosing ? 0 : 1,
-          transform: isClosing ? "scale(0.94)" : "scale(1)",
+          opacity: shown ? 1 : 0,
+          transform: shown ? "scale(1)" : "scale(0.94)",
           transition: "opacity 250ms ease, transform 250ms ease",
           position: "relative", backgroundColor: "#F7F7F7", border: "1px solid #AAFF00",
           borderRadius: "12px", width: mobile ? "92vw" : "min(1000px, 90vw)",
