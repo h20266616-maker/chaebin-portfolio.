@@ -188,7 +188,7 @@ function Card({ project, setRef, setVideoRef, onEnter, onLeave, onClick }) {
         )}
       </div>
       <div style={{ padding: "10px 12px", backgroundColor: "#F7F7F7", flexShrink: 0, pointerEvents: "none" }}>
-        <p style={{ fontWeight: 600, fontSize: "0.52rem", color: "#AAFF00", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "4px" }}>
+        <p style={{ display: "inline-block", fontWeight: 600, fontSize: "0.52rem", color: "#1A1A1A", backgroundColor: "#AAFF00", padding: "1px 4px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "4px" }}>
           {project.category}
         </p>
         <p style={{ fontWeight: 700, fontSize: "0.68rem", color: "#1A1A1A", lineHeight: 1.25 }}>{display}</p>
@@ -208,9 +208,10 @@ const navBtnStyle = {
   cursor: "pointer", letterSpacing: "0.1em", transition: "color 150ms ease",
   fontFamily: "inherit", padding: "4px 0", userSelect: "none",
 };
+// 호버: 라임은 글자색이 아니라 밑줄로만
 const limeHover = {
-  onMouseEnter: (e) => { e.currentTarget.style.color = "#AAFF00"; },
-  onMouseLeave: (e) => { e.currentTarget.style.color = "#1A1A1A"; },
+  onMouseEnter: (e) => { Object.assign(e.currentTarget.style, { textDecoration: "underline", textDecorationColor: "#AAFF00", textDecorationThickness: "2px", textUnderlineOffset: "4px" }); },
+  onMouseLeave: (e) => { e.currentTarget.style.textDecoration = "none"; },
 };
 
 /* ---------- 큰 이미지 좌우 화살표 ---------- */
@@ -348,7 +349,9 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
         }}
       >
         <button
-          onClick={onClose} aria-label="닫기" {...limeHover}
+          onClick={onClose} aria-label="닫기"
+          onMouseEnter={(e) => { e.currentTarget.style.color = "#6B6B6B"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "#1A1A1A"; }}
           style={{
             position: "absolute", top: "14px", right: "14px", zIndex: 10, background: "none",
             border: "none", fontSize: "1.75rem", fontWeight: 800, color: "#1A1A1A", cursor: "pointer",
@@ -372,7 +375,7 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
             onPointerCancel={() => { dragRef.current = null; }}
             onDragStart={(e) => e.preventDefault()}
             style={{
-              flex: 1, position: "relative", minHeight: mobile ? "200px" : "360px", overflow: "hidden", backgroundColor: "#1C1C1C",
+              flex: 1, position: "relative", minHeight: mobile ? "min(56vh, 460px)" : "360px", overflow: "hidden", backgroundColor: "#1C1C1C",
               touchAction: multi ? "pan-y" : "auto", cursor: multi ? "grab" : "default", userSelect: "none",
             }}
           >
@@ -429,7 +432,13 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
           </div>
 
           {images.length > 1 && (
-            <div style={{ display: "flex", gap: "8px", padding: "12px 16px", flexWrap: "wrap", borderTop: "1px solid #D4D4D4", backgroundColor: "#EBEBEB" }}>
+            <div
+              style={{
+                display: "flex", gap: "8px", padding: "12px 16px", borderTop: "1px solid #D4D4D4", backgroundColor: "#EBEBEB",
+                // 모바일은 한 줄 가로 스크롤 (큰 이미지 영역이 줄어들지 않도록)
+                flexWrap: mobile ? "nowrap" : "wrap", overflowX: mobile ? "auto" : "visible", flexShrink: 0,
+              }}
+            >
               {images.map((im, i) => (
                 <div
                   key={i}
@@ -469,7 +478,7 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
             display: "flex", flexDirection: "column", gap: "16px", minWidth: 0, overflowY: "auto",
           }}
         >
-          <p style={{ fontWeight: 600, fontSize: "0.62rem", color: "#AAFF00", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "-4px" }}>
+          <p style={{ alignSelf: "flex-start", fontWeight: 600, fontSize: "0.62rem", color: "#1A1A1A", backgroundColor: "#AAFF00", padding: "2px 6px", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "-4px" }}>
             {project.category}
           </p>
           {project.award && (
@@ -485,7 +494,7 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
           )}
           {project.series && (
             <div style={{ marginTop: "-4px" }}>
-              <span style={{ ...labelStyle, marginBottom: 0, marginRight: "8px" }}>SERIES</span>
+              <span style={{ ...labelStyle, marginBottom: 0, marginRight: "8px" }}>시리즈</span>
               <span style={{ fontWeight: 600, fontSize: "0.875rem", color: "#1A1A1A" }}>{project.series}</span>
             </div>
           )}
@@ -497,25 +506,25 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
           {project.description && <p style={bodyStyle}>{project.description}</p>}
           {project.role && (
             <div style={{ marginTop: "8px" }}>
-              <p style={labelStyle}>ROLE</p>
+              <p style={labelStyle}>역할</p>
               <p style={bodyStyle}>{project.role}</p>
             </div>
           )}
           {project.seriesDescription && (
             <div style={{ marginTop: "8px" }}>
-              <p style={labelStyle}>ABOUT THE SERIES</p>
+              <p style={labelStyle}>시리즈 소개</p>
               <p style={{ ...bodyStyle, opacity: 0.8 }}>{project.seriesDescription}</p>
             </div>
           )}
           {project.process && (
             <div style={{ marginTop: "8px" }}>
-              <p style={labelStyle}>PROCESS</p>
+              <p style={labelStyle}>작업 과정</p>
               <p style={{ ...bodyStyle, opacity: 0.9 }}>{project.process}</p>
             </div>
           )}
           {project.tools?.length > 0 && (
             <div>
-              <p style={labelStyle}>TOOLS</p>
+              <p style={labelStyle}>사용 도구</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                 {project.tools.map((t) => (
                   <span key={t} style={{ border: "1px solid #1A1A1A", padding: "3px 10px", fontSize: "0.65rem", color: "#1A1A1A", whiteSpace: "nowrap" }}>
@@ -524,6 +533,16 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
                 ))}
               </div>
             </div>
+          )}
+          {project.board && (
+            <p style={{ ...bodyStyle, margin: 0 }}>
+              <a
+                href={project.board.href} target="_blank" rel="noopener noreferrer"
+                style={{ color: "#1A1A1A", textDecoration: "underline", textDecorationColor: "#AAFF00", textDecorationThickness: "2px", textUnderlineOffset: "4px" }}
+              >
+                {project.board.label} ↗
+              </a>
+            </p>
           )}
           {project.link && (
             <div>
@@ -542,11 +561,11 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "16px", borderTop: "1px solid #D4D4D4", marginTop: "4px", flexShrink: 0 }}>
-            <button onClick={onPrev} {...limeHover} style={navBtnStyle}>← PREV</button>
+            <button onClick={onPrev} {...limeHover} style={navBtnStyle}>← 이전</button>
             <span style={{ fontSize: "0.68rem", color: "#8C8C8C", fontVariantNumeric: "tabular-nums", letterSpacing: "0.04em" }}>
               {pad(index + 1)} / {pad(projects.length)}
             </span>
-            <button onClick={onNext} {...limeHover} style={navBtnStyle}>NEXT →</button>
+            <button onClick={onNext} {...limeHover} style={navBtnStyle}>다음 →</button>
           </div>
         </div>
       </div>
@@ -589,6 +608,29 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
 
   useEffect(() => { modeRef.current = mode; scrollRef.current = 0; }, [mode]);
   useEffect(() => { selectedRef.current = selected; }, [selected]);
+
+  // 개별 작품 링크: #work/<작품 id>로 들어오면 해당 모달 열기
+  useEffect(() => {
+    const sync = () => {
+      const m = window.location.hash.match(/^#work\/(.+)$/);
+      if (!m) return;
+      const p = projects.find((x) => String(x.id) === decodeURIComponent(m[1]));
+      if (!p) return;
+      document.getElementById(id)?.scrollIntoView();
+      pausedRef.current = true;
+      setSelected(p);
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, [projects, id]);
+
+  // 모달을 열거나 넘기면 주소도 바꾸기, 닫으면 #work로
+  useEffect(() => {
+    const hash = selected ? `#work/${encodeURIComponent(selected.id)}` : "#work";
+    if (!selected && !window.location.hash.startsWith("#work/")) return;
+    if (window.location.hash !== hash) history.replaceState(null, "", hash);
+  }, [selected]);
 
   const open = (p) => {
     pausedRef.current = true;
@@ -796,7 +838,7 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
           }}
         >
           <p style={{ fontWeight: 600, fontSize: "0.875rem", color: "#1A1A1A", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-            SELECTED WORKS
+            작업
           </p>
           <div style={{ display: "flex", gap: "8px", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none" }}>
             {MODES.map((m) => (
@@ -826,7 +868,7 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             <p style={{ fontSize: "0.75rem", color: "rgba(26,26,26,0.6)", letterSpacing: "0.15em", textTransform: "uppercase", margin: 0 }}>
-              SCROLL TO EXPLORE →
+              넘겨서 보기 →
             </p>
             {overflowing && mode === "TILT" && (
               <p style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.68rem", color: "#8C8C8C", letterSpacing: "0.12em", margin: 0 }}>
@@ -840,6 +882,31 @@ export default function WorkGallery({ projects = [], id = "work", sectionBackgro
           </p>
         </div>
       </div>
+
+      {/* 작품 목록 — 줄을 누르면 상세 모달 */}
+      <ul style={{ listStyle: "none", margin: "24px 0 0", padding: 0, borderTop: "1px solid #1A1A1A" }}>
+        {projects.map((p) => (
+          <li key={p.id} style={{ borderBottom: "1px solid #E4E4E4" }}>
+            <button
+              type="button"
+              onClick={() => open(p)}
+              {...limeHover}
+              style={{
+                width: "100%", display: "flex", flexWrap: "wrap", alignItems: "baseline", columnGap: "16px", rowGap: "4px",
+                padding: "14px 0", background: "none", border: "none", textAlign: "left", cursor: "pointer",
+                fontFamily: "inherit", color: "#1A1A1A",
+              }}
+            >
+              <span style={{ width: "48px", flexShrink: 0, color: "#6B6B6B", fontSize: "0.875rem" }}>{p.year}</span>
+              <span style={{ fontWeight: 700, fontSize: "1rem" }}>{p.title}</span>
+              <span style={{ color: "#6B6B6B", fontSize: "0.75rem", letterSpacing: "0.06em" }}>{p.category}</span>
+              {p.award && (
+                <span style={{ fontSize: "0.75rem", color: "#1A1A1A" }}>{p.award.startsWith("✦") ? p.award : `✦ ${p.award}`}</span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
 
       {selected && (
         <DetailModal

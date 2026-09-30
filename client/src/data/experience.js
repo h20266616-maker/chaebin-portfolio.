@@ -6,7 +6,7 @@ export const careers = [
     description: '',
   },
   {
-    title: 'ISO 동아리 활동',
+    title: 'I-SO 동아리 활동',
     year: '2026-1학기~',
     description: '',
     current: true,
@@ -37,18 +37,18 @@ export const awards = [
     description: '한림대학교 Town MICE 연구소 주최, (주)더픽트 영수증 플랫폼을 활용한 화천군 관광 문제 해결',
   },
   {
-    title: '디지털인문예술전공 기말프로젝트 전시회 홍보 포스터 공모전 장려상 수상',
+    title: '디지털인문예술전공 기말프로젝트 전시회 홍보 포스터 공모전 장려상',
     year: '2026',
     description: '',
   },
   {
-    title: '강원과 함께 하는 도서관 - 장서표 디자인 공모전 최우수상 수상',
+    title: '강원과 함께 하는 도서관 - 장서표 디자인 공모전 최우수상',
     year: '2026',
     description: '',
   },
   {
-    title: '디지털인문예술전공 전시회 우수상 수상',
-    year: '2026-1학기',
+    title: '디지털인문예술전공 전시회 우수상',
+    year: '2026',
     description: '',
   },
 ]
