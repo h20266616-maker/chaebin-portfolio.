@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { planning } from '../data/planning'
+import { projects } from '../data/projects'
 import Planning from './Planning'
 import ProjectModal from './ProjectModal'
-import Work from './Work'
+import WorkGallery from './WorkGallery'
 
 // 홍보·기획 작업 개별 링크: #work/<id>
 const HASH_PREFIX = '#work/'
@@ -41,8 +42,8 @@ export default function Works() {
   return (
     <>
       <Planning works={planning} onOpen={open} />
-      {/* 디자인 작업 — 기존 WORK 갤러리 + 상세 모달 그대로 */}
-      <Work />
+      {/* 디자인 작업 — 기존 WORK 갤러리(WorkGallery.jsx) 그대로 */}
+      <WorkGallery projects={projects} />
       <ProjectModal project={openProject} onClose={close} />
     </>
   )
