@@ -15,6 +15,7 @@ export const projects = [
     tools: ['React', 'Vite', 'Firebase', '카카오맵 API', 'Vercel'],
     link: 'https://hwacheon-receipt.vercel.app/',
     linkLabel: '화천 지역상생 영수증',
+    role: '팀 프로젝트 · 앱 개발 담당',
     images: [
       '/images/work/project-11-1.jpg',
       '/images/planning/town-mice/02-start.webp',
@@ -76,6 +77,7 @@ export const projects = [
   {
     id: 9,
     title: '하동이와 함께하는 춘천 여름',
+    role: '팀 프로젝트 · 3D 작업 참여',
     category: 'CHARACTER DESIGN',
     year: '2026',
     award: '✦ 26-1 DAH EXHIBITION 우수상',
@@ -94,6 +96,7 @@ export const projects = [
   {
     id: 10,
     title: 'SYNK',
+    role: '팀 프로젝트 · 발표와 자료 정리 담당',
     category: 'UX/UI DESIGN',
     year: '2026',
     award: '✦ 디지털인문예술입문 팀 프로젝트',

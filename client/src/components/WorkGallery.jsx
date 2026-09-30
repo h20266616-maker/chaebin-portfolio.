@@ -398,6 +398,12 @@ function DetailModal({ project, projects, isClosing, onClose, onPrev, onNext }) 
           <p style={{ fontWeight: 400, fontSize: "0.78rem", color: "#8C8C8C", marginTop: "-8px" }}>{project.year}</p>
           <div style={{ height: "1px", backgroundColor: "#D4D4D4", flexShrink: 0 }} />
           {project.description && <p style={bodyStyle}>{project.description}</p>}
+          {project.role && (
+            <div style={{ marginTop: "8px" }}>
+              <p style={labelStyle}>ROLE</p>
+              <p style={bodyStyle}>{project.role}</p>
+            </div>
+          )}
           {project.seriesDescription && (
             <div style={{ marginTop: "8px" }}>
               <p style={labelStyle}>ABOUT THE SERIES</p>
