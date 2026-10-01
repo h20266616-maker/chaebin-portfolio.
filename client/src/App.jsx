@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import About from './components/About'
 import Experience from './components/Experience'
-import FolderFiles from './components/FolderFiles'
 import Header from './components/Header'
-import WorkGallery from './components/WorkGallery'
+import Works from './components/Works'
 import { projects } from './data/projects'
 
 export default function App() {
@@ -25,9 +24,8 @@ export default function App() {
       <main>
         <About />
         <Experience />
-        {/* 작업 섹션: 파일철(#file/작품id) + 3D 갤러리(#work/작품id → 상세 모달) */}
-        <FolderFiles projects={projects} email="a01022966356@gmail.com" />
-        <WorkGallery projects={projects} />
+        {/* 작업 섹션: 파일 / 갤러리 보기 방식 탭 (#file/작품id → 파일, #work/작품id → 갤러리) */}
+        <Works projects={projects} email="a01022966356@gmail.com" />
       </main>
       <footer className="border-t border-line">
         <p className="mx-auto max-w-page px-gutter py-8 text-small text-muted md:px-8">© 2026 박채빈</p>
