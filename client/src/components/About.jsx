@@ -3,7 +3,7 @@ import Img from './Img'
 
 export default function About() {
   return (
-    <section id="about" aria-labelledby="about-title" className="pb-16 pt-[calc(theme(spacing.header)+48px)] md:pb-section md:pt-[calc(theme(spacing.header)+80px)]">
+    <section id="about" aria-labelledby="about-title" className="border-t border-line py-16 md:py-section">
       <div className="mx-auto max-w-page px-gutter md:px-8">
         {/* 사진 + 이름 가로 배치 (아래쪽 정렬) */}
         <div className="flex items-end gap-6">

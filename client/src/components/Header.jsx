@@ -32,9 +32,9 @@ function ProgressBar() {
 }
 
 const NAV = [
-  { label: '소개', href: '#about' },
-  { label: '활동', href: '#experience' },
-  { label: '작업', href: '#works' },
+  { label: '작업 파일', href: '#files' },
+  { label: '이력서', href: '#about' },
+  { label: '둘러보기', href: '#work' },
 ]
 
 export default function Header() {
@@ -55,7 +55,7 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-header h-header border-b border-line bg-bg">
       <ProgressBar />
       <div className="mx-auto flex h-full max-w-page items-center justify-between px-gutter md:px-8">
-        <a href="#about" className="text-h3 font-heading">
+        <a href="#files" className="text-h3 font-heading">
           박채빈
         </a>
 

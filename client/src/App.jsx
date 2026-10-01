@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 import About from './components/About'
 import Experience from './components/Experience'
+import FolderFiles from './components/FolderFiles'
 import Header from './components/Header'
-import Works from './components/Works'
+import WorkGallery from './components/WorkGallery'
 import { projects } from './data/projects'
 
 export default function App() {
-  // 첫 로드 때 #files 같은 섹션 주소로 바로 이동 (#file/작품id, #work/작품id는 각 컴포넌트가 처리)
+  // 첫 로드 때 #files 같은 섹션 주소로 바로 이동 (#file/작품id는 FolderFiles, #work/작품id는 WorkGallery가 처리)
   useEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1))
     if (id && !id.includes('/')) document.getElementById(id)?.scrollIntoView()
@@ -15,17 +16,21 @@ export default function App() {
   return (
     <>
       <a
-        href="#about"
+        href="#files"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-modal focus:bg-bg focus:px-4 focus:py-2"
       >
         본문으로 건너뛰기
       </a>
       <Header />
-      <main>
+      {/* 고정 헤더 높이만큼 띄워서 첫 섹션(작업 파일)이 가려지지 않게 */}
+      <main className="pt-header">
+        {/* 1. 작업 파일 */}
+        <FolderFiles projects={projects} email="a01022966356@gmail.com" />
+        {/* 2. 이력서 — TODO: ResumeSheet.jsx를 받으면 About·Experience를 <ResumeSheet /> 하나로 교체 */}
         <About />
         <Experience />
-        {/* 작업 섹션: 파일 / 갤러리 보기 방식 탭 (#file/작품id → 파일, #work/작품id → 갤러리) */}
-        <Works projects={projects} email="a01022966356@gmail.com" />
+        {/* 3. 3D 갤러리 둘러보기 */}
+        <WorkGallery projects={projects} />
       </main>
       <footer className="border-t border-line">
         <p className="mx-auto max-w-page px-gutter py-8 text-small text-muted md:px-8">© 2026 박채빈</p>
