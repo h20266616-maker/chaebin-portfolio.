@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    scroll-padding-top: theme('spacing.header');
+  /* 고정 헤더에 가려지지 않게: 섹션마다 scroll-margin-top (전체 scroll-padding과 겹치지 않도록 한 곳에서만) */
+  main section[id] {
+    scroll-margin-top: theme('spacing.header');
   }
 
   body {

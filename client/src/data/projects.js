@@ -2,6 +2,7 @@ export const projects = [
   {
     id: 11,
     title: '화천 지역상생 영수증',
+    shortTitle: '화천 영수증',
     category: 'APP DEVELOPMENT',
     year: '2026',
     award: '✦ 2026 영수증 플랫폼 기반 Town MICE 아이디어톤 대상',
@@ -30,6 +31,8 @@ export const projects = [
   {
     id: 12,
     title: '하얀도화지 26-1 정기모임 아카이빙',
+    shortTitle: '하얀도화지 26-1 정기모임',
+    mobileShortTitle: '26-1 정기모임',
     category: 'SNS · ARCHIVING',
     year: '2026',
     award: '',
@@ -88,6 +91,8 @@ export const projects = [
   {
     id: 13,
     title: '하얀도화지 2026-2 신입 부원 모집',
+    shortTitle: '하얀도화지 26-2 신입 모집',
+    mobileShortTitle: '26-2 신입 모집',
     category: 'SNS · ARCHIVING',
     year: '2026',
     award: '',
@@ -115,6 +120,8 @@ export const projects = [
   {
     id: 16,
     title: '하얀도화지 2026-2 운영진 모집',
+    shortTitle: '하얀도화지 26-2 운영진 모집',
+    mobileShortTitle: '26-2 운영진 모집',
     category: 'SNS · ARCHIVING',
     year: '2026',
     award: '',
@@ -129,6 +136,8 @@ export const projects = [
   {
     id: 14,
     title: '하얀도화지 2026-2 동아리 페어',
+    shortTitle: '하얀도화지 26-2 동아리 페어',
+    mobileShortTitle: '26-2 동아리 페어',
     category: 'SNS · ARCHIVING',
     year: '2026',
     award: '',
@@ -164,6 +173,8 @@ export const projects = [
   {
     id: 15,
     title: '하얀도화지 2026-2 정기모임',
+    shortTitle: '하얀도화지 26-2 정기모임',
+    mobileShortTitle: '26-2 정기모임',
     category: 'SNS · ARCHIVING',
     year: '2026',
     award: '',
@@ -193,6 +204,7 @@ export const projects = [
   {
     id: 1,
     title: '흔열 (痕熱)',
+    shortTitle: '흔열',
     category: 'POSTER DESIGN',
     year: '2026',
     award: '2026 디지털인문예술전공 기말프로젝트 전시회 홍보 포스터 공모전 장려상',
@@ -209,6 +221,7 @@ export const projects = [
   {
     id: 'exlibris-2026',
     title: '인제 기적의 도서관 장서표',
+    shortTitle: '인제 장서표',
     category: 'EX LIBRIS',
     year: '2026',
     award: '2026 강원과 함께 하는 도서관 - 장서표 디자인 공모전 최우수상 「고요한 기적」',
@@ -242,6 +255,7 @@ export const projects = [
   {
     id: 9,
     title: '하동이와 함께하는 춘천 여름',
+    shortTitle: '하동이 춘천 여름',
     role: '팀 프로젝트 · 3D 작업 참여',
     category: 'CHARACTER DESIGN',
     year: '2026',
@@ -261,6 +275,7 @@ export const projects = [
   {
     id: 10,
     title: 'SYNK',
+    shortTitle: 'SYNK',
     role: '팀 프로젝트 · 발표와 자료 정리 담당',
     category: 'UX/UI DESIGN',
     year: '2026',

@@ -14,6 +14,9 @@ const MIN_H = 600;
 const CLOSED_H = 580;
 const FLAP_H = 400;
 const SWAP_MS = 560;
+const HEADER_H = 64; // 사이트 고정 헤더 높이
+const TOP_GAP = 28; // 탭 위쪽 여백
+const NAV_H = 76; // 아래 '이전/닫기/다음' 줄 (여백 포함)
 const TONES = ["dark", "lime", "cream"];
 const BG = { dark: INK, lime: LIME, cream: CREAM };
 const isVideo = (s) => typeof s === "string" && /\.(mp4|webm|mov)$/i.test(s);
@@ -21,7 +24,10 @@ const pad = (n) => String(n).padStart(2, "0");
 const toneOf = (i) => TONES[i % TONES.length];
 
 const css = `
-.ff{position:relative;overflow-x:clip;padding:clamp(72px,9vw,110px) clamp(16px,4vw,48px) 0;max-width:1240px;margin:0 auto;box-sizing:border-box;scroll-margin-top:72px}
+.ff{position:relative;overflow-x:clip;padding:${TOP_GAP}px clamp(16px,4vw,48px) 0;max-width:1240px;margin:0 auto;box-sizing:border-box;
+  scroll-margin-top:${HEADER_H}px;
+  /* 열린 파일 높이: 화면 - 고정 헤더 - 탭 위 여백 - 탭 - 아래 버튼 줄 */
+  --ff-h:clamp(420px, calc(100vh - ${HEADER_H}px - ${TOP_GAP}px - 52px - ${NAV_H}px), 860px)}
 .ff *{box-sizing:border-box}
 .ff-folder{position:relative;perspective:1800px;perspective-origin:50% 0%}
 
@@ -34,12 +40,13 @@ const css = `
 .ff.is-open .ff-nametag{transform:translateY(100%)}
 .ff-tabs{position:absolute;inset:0;display:flex;align-items:flex-end;gap:3px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 .ff-tabs::-webkit-scrollbar{display:none}
-.ff-t{flex:1 1 0;min-width:86px;max-width:150px;height:40px;border:0;border-radius:12px 12px 0 0;padding:6px 12px 0;text-align:left;cursor:pointer;
+.ff-t{flex:1 0 auto;min-width:72px;height:40px;border:0;border-radius:12px 12px 0 0;padding:6px 12px 0;text-align:left;cursor:pointer;
   font:inherit;font-size:.64rem;line-height:1.35;position:relative;filter:brightness(.86);transform:translateY(105%);
   transition:height .3s ease,filter .3s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
 .ff.is-open .ff-t{transform:none;transition-delay:0s,0s,calc(.9s + var(--i) * 55ms)}
 .ff.is-open.ready .ff-t{transition-delay:0s}
-.ff-t b{display:block;font-size:.72rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ff-t b{display:block;font-size:.72rem;font-weight:800;white-space:nowrap}
+.ff-t > span{white-space:nowrap}
 .ff-t.dark{background:${INK};color:${PAPER}}
 .ff-t.lime{background:${LIME};color:${INK}}
 .ff-t.cream{background:${CREAM};color:${INK}}
@@ -58,7 +65,7 @@ const css = `
 .ff:not(.is-open) .ff-stack{opacity:0;visibility:hidden}
 .ff.is-open .ff-stack{transition:opacity .4s ease .7s}
 
-.ff-sheet{position:relative;min-height:${MIN_H}px;display:grid;
+.ff-sheet{position:relative;height:var(--ff-h);display:grid;grid-template-rows:minmax(0,1fr);
   grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);padding:clamp(18px,3vw,36px)}
 .ff-sheet.dark{background:${INK};color:${PAPER}}
 .ff-sheet.lime{background:${LIME};color:${INK}}
@@ -109,7 +116,7 @@ const css = `
 .ff.is-open .ff-tie-label{opacity:0;transition:opacity .2s ease}
 
 /* 파일 안쪽 */
-.ff-view{position:relative;border-radius:10px;overflow:hidden;background:rgba(127,127,127,.2);min-height:440px;touch-action:pan-y;user-select:none}
+.ff-view{position:relative;border-radius:10px;overflow:hidden;background:rgba(127,127,127,.2);height:100%;min-height:0;touch-action:pan-y;user-select:none}
 .ff-view img,.ff-view video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
 .ff-arrow{position:absolute;top:50%;width:40px;height:40px;margin-top:-20px;border-radius:50%;border:0;cursor:pointer;z-index:2;
   background:rgba(28,28,28,.5);color:${PAPER};font-size:1.2rem;line-height:1;display:flex;align-items:center;justify-content:center}
@@ -118,13 +125,15 @@ const css = `
 .ff-cap{position:absolute;left:10px;bottom:10px;right:76px;z-index:2;color:${PAPER};font-size:.72rem;font-weight:700}
 .ff-cap span{background:rgba(28,28,28,.6);padding:3px 8px;border-radius:3px;display:inline-block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
 .ff-count{position:absolute;right:10px;bottom:10px;z-index:2;background:rgba(28,28,28,.6);color:${PAPER};font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:3px;font-variant-numeric:tabular-nums}
-.ff-text{display:flex;flex-direction:column;gap:14px;min-width:0;padding-top:4px}
+.ff-text{display:flex;flex-direction:column;gap:14px;min-width:0;min-height:0;padding-top:4px;padding-right:6px;
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.ff-text > *{flex-shrink:0}
 .ff-no{font-size:.72rem;opacity:.65;font-variant-numeric:tabular-nums}
 .ff-badges{display:flex;flex-wrap:wrap;gap:6px}
 .ff-badge{font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:3px;background:${LIME};color:${INK}}
 .ff-sheet.lime .ff-badge{background:${INK};color:${LIME}}
 .ff-badge.o,.ff-sheet.lime .ff-badge.o{background:transparent;border:1px solid currentColor;color:inherit;font-weight:600}
-.ff-text h4{margin:0;font-size:clamp(1.5rem,3vw,2.3rem);font-weight:800;letter-spacing:-.04em;line-height:1.2}
+.ff-text h4{margin:0;font-size:clamp(1.3rem,1rem + 1.2vw,2rem);font-weight:800;letter-spacing:-.04em;line-height:1.2}
 .ff-desc{margin:0;font-size:.9rem;line-height:1.85;max-width:36em}
 .ff-dl{display:grid;grid-template-columns:4.5em 1fr;gap:8px 12px;margin:0;font-size:.82rem;border-top:1px solid currentColor;padding-top:14px}
 .ff-dl dt{opacity:.6}
@@ -133,19 +142,22 @@ const css = `
 .ff-link:hover{background:${LIME};border-color:${LIME};color:${INK}}
 .ff-sheet.lime .ff-link:hover{background:${INK};border-color:${INK};color:${LIME}}
 
-.ff-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:44px;color:${INK};font-size:.8rem;font-weight:700;transition:opacity .3s ease .6s}
+.ff-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:30px;color:${INK};font-size:.8rem;font-weight:700;transition:opacity .3s ease .6s}
 .ff:not(.is-open) .ff-nav{opacity:0;pointer-events:none;transition:none}
 .ff-pill{background:none;border:1px solid ${INK};border-radius:999px;padding:7px 15px;font:inherit;font-size:.78rem;font-weight:600;color:${INK};cursor:pointer}
 .ff-pill:hover{background:${INK};color:${LIME}}
 .ff-pill:disabled{opacity:.35;cursor:default;background:none;color:${INK}}
 
 @media (max-width:760px){
-  .ff-t{min-width:80px}
+  .ff-t{min-width:64px;padding:6px 10px 0}
   .ff-nametag{gap:14px;width:86%}
   .ff-foot{padding:0 18px;font-size:.62rem}
   .ff-meta{padding:18px 18px 0;font-size:.62rem}
-  .ff-sheet{grid-template-columns:1fr;min-height:0}
-  .ff-view{min-height:0;aspect-ratio:4/5}
+  /* 모바일: 세로로 쌓기 (높이 제한·내부 스크롤 없음) */
+  .ff-sheet{grid-template-columns:1fr;grid-template-rows:auto;height:auto}
+  .ff-view{height:auto;aspect-ratio:4/5}
+  .ff-text{overflow:visible;padding-right:0}
+  .ff-t-pre{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   .ff,.ff *{transition:none !important;animation:none !important}
@@ -266,6 +278,17 @@ export default function FolderFiles({ projects = [], id = "files", ownerName = "
   useEffect(() => () => clearTimeout(timer.current), []);
   const p = projects[cur];
 
+  // 탭 줄이 넘쳐 가로 스크롤될 때, 선택된 탭이 탭 줄 가운데에 보이도록
+  const tabsRef = useRef(null);
+  useEffect(() => {
+    const box = tabsRef.current;
+    const on = box?.querySelector(".ff-t.on");
+    if (!box || !on || box.scrollWidth <= box.clientWidth) return;
+    const left = on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    box.scrollTo({ left: Math.max(0, left), behavior: reduce ? "auto" : "smooth" });
+  }, [cur, open]);
+
   const [ready, setReady] = useState(false);
   useEffect(() => {
     if (!open) { setReady(false); return; }
@@ -283,7 +306,7 @@ export default function FolderFiles({ projects = [], id = "files", ownerName = "
             <div><span>NAME</span><b>{ownerName}</b><br /><span>FILE</span><b>{pad(total)}건</b></div>
             <div><span>DATE</span><b>2026</b></div>
           </div>
-          <div className="ff-tabs" role="tablist" aria-label="작업 목록" aria-hidden={!open}>
+          <div className="ff-tabs" ref={tabsRef} role="tablist" aria-label="작업 목록" aria-hidden={!open}>
             {projects.map((pr, i) => (
               <button
                 key={pr.id}
@@ -293,10 +316,21 @@ export default function FolderFiles({ projects = [], id = "files", ownerName = "
                 style={{ "--i": i }}
                 onClick={() => select(i)}
                 tabIndex={open ? 0 : -1}
-                title={pr.title}
+                title={pr.shortTitle || pr.title}
               >
-                <span>{pad(i + 1)}</span>
-                <b>{pr.title}</b>
+                {(() => {
+                  // 탭 이름: shortTitle. 모바일용 mobileShortTitle이 있으면 앞부분(예: "하얀도화지")은
+                  // 데스크톱에서만 윗줄에 보이고 모바일에서는 숨김.
+                  const full = pr.shortTitle || pr.title;
+                  const main = pr.mobileShortTitle || full;
+                  const pre = full.endsWith(main) ? full.slice(0, full.length - main.length).trim() : "";
+                  return (
+                    <>
+                      <span>{pad(i + 1)}{pre && <span className="ff-t-pre"> {pre}</span>}</span>
+                      <b>{main}</b>
+                    </>
+                  );
+                })()}
               </button>
             ))}
           </div>
