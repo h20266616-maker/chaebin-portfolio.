@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
-import About from './components/About'
-import Experience from './components/Experience'
 import FolderFiles from './components/FolderFiles'
 import Header from './components/Header'
+import ResumeSheet from './components/ResumeSheet'
 import WorkGallery from './components/WorkGallery'
 import { projects } from './data/projects'
 
@@ -26,9 +25,8 @@ export default function App() {
       <main className="pt-header">
         {/* 1. 작업 파일 */}
         <FolderFiles projects={projects} email="a01022966356@gmail.com" />
-        {/* 2. 이력서 — TODO: ResumeSheet.jsx를 받으면 About·Experience를 <ResumeSheet /> 하나로 교체 */}
-        <About />
-        <Experience />
+        {/* 2. 이력서 (#about) */}
+        <ResumeSheet />
         {/* 3. 3D 갤러리 둘러보기 */}
         <WorkGallery projects={projects} />
       </main>

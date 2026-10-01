@@ -21,55 +21,9 @@
   }
 }
 
-@layer components {
-  .link {
-    @apply underline decoration-accent decoration-link underline-offset-link transition-colors duration-fast hover:decoration-ink;
-  }
-}
-
-/* "현재" 배지의 살아 있는 점: 6px 점 + 2초마다 커지며 사라지는 원 */
-.live-dot {
-  position: relative;
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: #1A1A1A;
-  flex-shrink: 0;
-}
-.live-dot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  background: #1A1A1A;
-  animation: live-pulse 2s ease-out infinite;
-}
-@keyframes live-pulse {
-  from { transform: scale(1); opacity: 0.5; }
-  to   { transform: scale(2.4); opacity: 0; }
-}
-
-/* 이름 글자 단위 등장: 가려진 영역 아래에서 위로 */
-.rise-mask {
-  display: inline-flex;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-.rise-char {
-  display: inline-block;
-  animation: rise-up 500ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-@keyframes rise-up {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
   }
-  .live-dot::after { animation: none; display: none; }
-  .rise-char { animation: none; transform: none; }
 }
