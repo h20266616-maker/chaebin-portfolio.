@@ -80,9 +80,9 @@ const css = `
 
 /* 1. 기울기 + 깊이 */
 .rs.m-tilt .rs-stage{perspective:1400px}
-.rs.m-tilt .rs-paper,.rs.m-tilt .rs-left,.rs.m-tilt .rs-tools,.rs.m-tilt .rs-skills{transform-style:preserve-3d}
+.rs.m-tilt .rs-doc,.rs.m-tilt .rs-paper,.rs.m-tilt .rs-left,.rs.m-tilt .rs-tools,.rs.m-tilt .rs-skills{transform-style:preserve-3d}
 .rs.m-tilt .rs-right{transform:translateZ(8px)}
-.rs.m-tilt .rs-paper{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
+.rs.m-tilt .rs-doc{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-origin:50% 55%;will-change:transform}
 .rs.m-tilt .rs-photo{transform:translateZ(46px) rotate(-2deg);box-shadow:calc(var(--sx,0) * 1px) calc(18px + var(--sy,0) * 1px) 28px -14px rgba(0,0,0,.55)}
 .rs.m-tilt .rs-clip{transform:translateZ(18px)}
 .rs.m-tilt .rs-tab-tape{transform:translateZ(30px) rotate(18deg)}
@@ -120,7 +120,7 @@ const css = `
 .rs:not(.m-flip) .rs-back{display:none}
 
 @media (prefers-reduced-motion:reduce){
-  .rs.m-tilt .rs-paper{transform:none !important}
+  .rs.m-tilt .rs-doc{transform:none !important}
   .rs.m-scan .rs-scan{display:none}
   .rs.m-mark .rs-mk{transition:none;background-size:100% 100%}
   .rs-flip{transition:none}
@@ -143,6 +143,7 @@ const css = `
 export default function ResumeSheet({ id = "about", data = DATA, motion = { tilt: true, scan: false, mark: true, flip: false } }) {
   const secRef = useRef(null);
   const paperRef = useRef(null);
+  const docRef = useRef(null);
   const awardsRef = useRef(null);
   const careerRef = useRef(null);
   const [scanned, setScanned] = useState(false);
@@ -171,7 +172,7 @@ export default function ResumeSheet({ id = "about", data = DATA, motion = { tilt
   // 1. 마우스를 따라 기울기
   useEffect(() => {
     if (!tiltOn) return;
-    const el = paperRef.current; if (!el) return;
+    const el = docRef.current; if (!el) return;
     let raf = 0, tx = 0, ty = 0, x = 0, y = 0, running = false;
     const step = () => {
       x += (tx - x) * 0.09; y += (ty - y) * 0.09;
@@ -200,6 +201,8 @@ export default function ResumeSheet({ id = "about", data = DATA, motion = { tilt
   return (
     <section id={id} ref={secRef} className={cls} aria-label="이력서">
       <style>{css}</style>
+      <div className="rs-stage">
+      <div className="rs-doc" ref={docRef}>
       <div className="rs-label" aria-hidden="true">
         <div className="rs-label-tab">
           <div><i>NAME</i><span>{data.name}</span></div>
@@ -207,7 +210,6 @@ export default function ResumeSheet({ id = "about", data = DATA, motion = { tilt
           <div><i>DATE</i><span>2026</span></div>
         </div>
       </div>
-      <div className="rs-stage">
       <div className="rs-paper" ref={paperRef}>
         <div className="rs-scan" aria-hidden="true"><div className="rs-scan-cover" /><div className="rs-scan-line" /></div>
         <div className="rs-left">
@@ -282,6 +284,7 @@ export default function ResumeSheet({ id = "about", data = DATA, motion = { tilt
             </div>
           </div>
         </div>
+      </div>
       </div>
       </div>
     </section>
